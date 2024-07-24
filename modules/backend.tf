@@ -22,3 +22,10 @@ resource "aws_dynamodb_table" "my_state_table" {
         Name = var.state_table_name
     }
 }
+
+resource "aws_s3_bucket" "polyiacbucket" {
+    bucket = var.state_bucket_name
+    tags = {
+        Name = var.state_bucket_name
+    }
+}
