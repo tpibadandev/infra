@@ -44,7 +44,7 @@ resource "aws_security_group" "ec2_security_group" {
 
 # EC2
 resource "aws_instance" "web_server" {
-  count                  = 2
+  count                  = 1
   ami                    = var.ami
   instance_type          = var.instance_type
   subnet_id              = aws_subnet.public_subnet[count.index].id

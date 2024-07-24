@@ -53,7 +53,7 @@ resource "aws_lb_target_group" "target_group" {
 }
 
 resource "aws_lb_target_group_attachment" "target_group_attachment" {
-  count = 2
+  count = 1
 
   target_group_arn = aws_lb_target_group.target_group.arn
   target_id        = aws_instance.web_server[count.index].id
