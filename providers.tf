@@ -8,7 +8,7 @@ terraform {
   }
   backend "s3" {
     bucket = "polyiacbucket"
-    key = "terraform.tfstate"
+    key = "github-actions-cicd/terraform.tfstate"
     region = "us-east-1"
     dynamodb_table = "polyiac-state-table"
   }
