@@ -13,7 +13,7 @@ module "create_two_tier_aws" {
   ami = var.ami
   instance_type  = var.instance_type
 
-  db_name     = var.db_name
-  db_username = var.db_username
-  db_password = var.db_password
+  db_name     = "tpiportal"
+  db_username = "tpiadmin"
+  db_password = "Admin09230923"
 }
