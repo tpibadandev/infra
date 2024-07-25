@@ -10,7 +10,7 @@ terraform {
     bucket = "polyiacbucket"
     key = "github-actions-cicd/terraform.tfstate"
     region = "us-east-1"
-    dynamodb_table = "polyiac-state-table"
+    
   }
 
 }
