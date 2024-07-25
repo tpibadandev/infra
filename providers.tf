@@ -1,21 +1,9 @@
-# Terraform and Provider Blocks
 terraform {
-  required_providers {
-    aws = {
-      version = "~> 4.55"
-      source  = "hashicorp/aws"
-    }
-  }
+  required_version = "~> 1.4"
+
   backend "s3" {
-    bucket = "polyiacbucket"
-    key = "github-actions-cicd/terraform.tfstate"
-    region = "us-east-1"
-    
+    key    = "github-actions-iaac-apache/terraform.tfstate" # the directory/file.tfstate
+    bucket = "polyiabucket"             # the bucket
+    region = "us-east-1"             # the region
   }
-
 }
-
-provider "aws" {
-  region = var.aws_region
-}
-
