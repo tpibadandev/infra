@@ -9,7 +9,7 @@ terraform {
   backend "s3" {
     bucket = "polyiacbucket"
     key = "github-actions-cicd/terraform.tfstate"
-    region = "us-west-1"
+    region = "us-west-2"
   }
 
 }
