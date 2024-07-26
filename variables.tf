@@ -103,10 +103,7 @@ variable "db_password" {
   type        = string
   sensitive   = true
 }
-variable "aws_region" {
-  description = "The AWS region to create resources in."
-  default     = "us-east-1"
-}
+
 
 variable "server_count" {
   type        = number
@@ -132,10 +129,7 @@ variable "tags" {
   description = "Tags to asscociate to taggable resources in this module"
 }
 
-variable "instance_type" {
-  type    = string
-  default = "t2.micro"
-}
+
 
 variable "root_volume_size" {
   type    = string
