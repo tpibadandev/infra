@@ -2,8 +2,3 @@
 output "db_endpoint" {
   value = aws_db_instance.db_instance.endpoint
 }
-output "ec2" {
-  value = {
-    for name, this in aws_instance.ec2 : name => this.public_dns
-  }
-}
