@@ -139,12 +139,15 @@ jobs:
         id: apply
         run: terraform apply -no-color -auto-approve -input=false | tee apply.txt
 
+<<<<<<< HEAD
       - name: Setup Ansible
         run: sudo apt-get update && sudo apt-get install -y ansible
 
       - name: Run Ansible playbook
         run: ansible-playbook ansible/playbook.yml -i 'localhost,' --connection=local
 
+=======
+>>>>>>> 0cf6799efc42bd0256466bff3b5b0ecfa2a604d7
       - name: Display the apply summary
         id: display
         run: |

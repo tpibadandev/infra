@@ -1,14 +1,18 @@
 # Variables
+<<<<<<< HEAD
 variable "aws_region" {
   description = "AWS deployment region"
   type        = string
 }
+=======
+>>>>>>> 0cf6799efc42bd0256466bff3b5b0ecfa2a604d7
 
 variable "env" {
   description = "Environment Name"
   type        = string
 }
 
+<<<<<<< HEAD
 variable "vpc_cidr_block" {
   description = "VPC IPv4 CIDR block"
   type        = string
@@ -24,6 +28,13 @@ variable "private_subnet_cidr_block" {
   type        = list(string)
 }
 
+=======
+variable "aws_region" {
+  description = "AWS deployment region"
+  type        = string
+}
+
+>>>>>>> 0cf6799efc42bd0256466bff3b5b0ecfa2a604d7
 variable "ec2_name" {
   description = "EC2 Web Server name"
   type        = string
@@ -44,6 +55,7 @@ variable "instance_type" {
   type        = string
 }
 
+<<<<<<< HEAD
 variable "user_data" {
   description = "User Data Shell script for Apache installation"
   type        = string
@@ -70,11 +82,14 @@ variable "db_allocated_storage" {
   default     = 10
 }
 
+=======
+>>>>>>> 0cf6799efc42bd0256466bff3b5b0ecfa2a604d7
 variable "db_name" {
   description = "The database name"
   type        = string
 }
 
+<<<<<<< HEAD
 variable "db_engine" {
   description = "The database engine to use"
   type        = string
@@ -93,6 +108,8 @@ variable "db_instance_class" {
   default     = "db.t2.small"
 }
 
+=======
+>>>>>>> 0cf6799efc42bd0256466bff3b5b0ecfa2a604d7
 variable "db_username" {
   description = "The master username for the database"
   type        = string
@@ -103,6 +120,7 @@ variable "db_password" {
   type        = string
   sensitive   = true
 }
+<<<<<<< HEAD
 variable "aws_region" {
   description = "The AWS region to create resources in."
   default     = "us-west-2"
@@ -161,3 +179,26 @@ locals {
   })
 
 }
+=======
+
+variable "vpc_cidr" {
+  type        = string
+  description = "This configures the vpc cidr"
+}
+variable "public_subnet1_az1_cidr" {
+  type        = string
+  description = "This configures the public subnet1 cidr"
+}
+variable "public_subnet2_az2_cidr" {
+  type        = string
+  description = "This configures the public subnet2 cidr"
+}
+variable "private_subnet1_az1_cidr" {
+  type        = string
+  description = "This configures the private subnet1 cidr"
+}
+variable "private_subnet2_az2_cidr" {
+  type        = string
+  description = "This configures the private subnet2 cidr"
+}
+>>>>>>> 0cf6799efc42bd0256466bff3b5b0ecfa2a604d7
