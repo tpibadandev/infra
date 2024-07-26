@@ -3,7 +3,7 @@ terraform {
 
   backend "s3" {
     key    = "github-actions-iaac-apache/terraform.tfstate" # the directory/file.tfstate
-    bucket = "chiptranz-iaac-apache"             # the bucket
+    bucket = "polyiabucket"             # the bucket
     region = "us-west-2"             # the region
   }
 }
