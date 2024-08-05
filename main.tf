@@ -11,7 +11,7 @@ locals {
 }
 
 module "networking" {
-  source           = "../modules/networking"
+  source           = "./modules/networking"
   vpc_cidr         = local.vpc_cidr
   access_ip        = var.access_ip
   public_sn_count  = 2
@@ -22,7 +22,7 @@ module "networking" {
 }
 
 module "compute" {
-  source                 = "../modules/compute"
+  source                 = "/modules/compute"
   frontend_app_sg        = module.networking.frontend_app_sg
   backend_app_sg         = module.networking.backend_app_sg
   bastion_sg             = module.networking.bastion_sg
@@ -37,7 +37,7 @@ module "compute" {
 }
 
 module "database" {
-  source               = "../modules/database"
+  source               = "/modules/database"
   db_storage           = 10
   db_engine_version    = "8.0"
   db_instance_class    = "db.t2.micro"
@@ -51,7 +51,7 @@ module "database" {
 }
 
 module "loadbalancing" {
-  source            = "../modules/loadbalancing"
+  source            = "/modules/loadbalancing"
   lb_sg             = module.networking.lb_sg
   public_subnets    = module.networking.public_subnets
   tg_port           = 80
