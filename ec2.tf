@@ -1,7 +1,7 @@
 # Bastion Host Amazon Linux 2 Server
 
 resource "aws_instance" "two_tier_bastion_host" {
-  ami                    = "ami-09988af04120b3591"
+  ami                    = "ami-0440fa9465661a496"
   instance_type          = "t2.micro"
   key_name               = aws_key_pair.two_tier_key_pair.key_name
   subnet_id              = module.public_subnet_1.id
