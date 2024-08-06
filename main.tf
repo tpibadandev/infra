@@ -1,66 +1,158 @@
-
 provider "aws" {
-  region = local.location
+  region = "us-east-1"
 }
 
-locals {
-  instance_type = "t2.micro"
-  location      = "us-east-1"
-  environment   = "dev"
-  vpc_cidr      = "10.123.0.0/16"
+# Overall VPC
+
+resource "aws_vpc" "two_tier_vpc" {
+  cidr_block           = "10.0.0.0/16"
+  instance_tenancy     = "default"
+  enable_dns_hostnames = true
+
+  tags = {
+    Name = "2-Tier-Achitecture-VPC"
+  }
 }
 
-module "networking" {
-  source           = "./modules/networking"
-  vpc_cidr         = local.vpc_cidr
-  access_ip        = var.access_ip
-  public_sn_count  = 2
-  private_sn_count = 2
-  db_subnet_group  = true
-  availabilityzone = "us-east-1a"
-  azs              = 2
+# Internet gateway for VPC to have internet connectivity
+
+resource "aws_internet_gateway" "two_tier_ig" {
+  vpc_id = aws_vpc.two_tier_vpc.id
+
+  tags = {
+    Name = "2-Tier-Achitecture-IG"
+  }
 }
 
-module "compute" {
-  source                 = "./modules/compute"
-  frontend_app_sg        = module.networking.frontend_app_sg
-  backend_app_sg         = module.networking.backend_app_sg
-  bastion_sg             = module.networking.bastion_sg
-  public_subnets         = module.networking.public_subnets
-  private_subnets        = module.networking.private_subnets
-  bastion_instance_count = 1
-  instance_type          = local.instance_type
-  key_name               = "Three-Tier-Terraform"
-  ssh_key                = "Three-Tier-Terraform"
-  lb_tg_name             = module.loadbalancing.lb_tg_name
-  lb_tg                  = module.loadbalancing.lb_tg
+# Public route table for Web/Presentation tier
+
+resource "aws_route_table" "two_tier_public_RT" {
+  vpc_id = aws_vpc.two_tier_vpc.id
+
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = aws_internet_gateway.two_tier_ig.id
+  }
+
+  tags = {
+    Name = "2-Tier-Public-RT"
+  }
 }
 
-module "database" {
-  source               = "./modules/database"
-  db_storage           = 10
-  db_engine_version    = "8.0"
-  db_instance_class    = "db.t2.micro"
-  db_name              = var.db_name
-  dbuser               = var.dbuser
-  dbpassword           = var.dbpassword
-  db_identifier        = "three-tier-db"
-  skip_db_snapshot     = true
-  rds_sg               = module.networking.rds_sg
-  db_subnet_group_name = module.networking.db_subnet_group_name[0]
-}
+# Private Route table for Application Tier
 
-module "loadbalancing" {
-  source            = "./modules/loadbalancing"
-  lb_sg             = module.networking.lb_sg
-  public_subnets    = module.networking.public_subnets
-  tg_port           = 80
-  tg_protocol       = "HTTP"
-  vpc_id            = module.networking.vpc_id
-  app_asg           = module.compute.app_asg
-  listener_port     = 80
-  listener_protocol = "HTTP"
-  azs               = 2
+resource "aws_route_table" "two_tier_private_RT" {
+  vpc_id = aws_vpc.two_tier_vpc.id
+
+  route {
+    cidr_block     = "0.0.0.0/0"
+    nat_gateway_id = aws_nat_gateway.two_tier_NAT.id
+  }
+
+  tags = {
+    Name = "2-Tier-Private-RT"
+  }
 }
 
 
+# Private Route table for Data Tier
+
+resource "aws_route_table" "two_tier_DB_RT" {
+  vpc_id = aws_vpc.two_tier_vpc.id
+
+  route {
+    cidr_block     = "0.0.0.0/0"
+    nat_gateway_id = aws_nat_gateway.two_tier_NAT_DB.id
+  }
+
+  tags = {
+    Name = "2-Tier-DB-RT"
+  }
+}
+
+# NAT gateway for secured internet conncetivity to private subnets note that this is created in a public subnet
+
+resource "aws_nat_gateway" "two_tier_NAT" {
+  subnet_id     = module.public_subnet_1.id
+  allocation_id = aws_eip.NAT_eip.id
+
+  tags = {
+    Name = "Two-Tier-NAT"
+  }
+
+  depends_on = [aws_internet_gateway.two_tier_ig]
+}
+
+resource "aws_eip" "NAT_eip" {
+  domain = "vpc"
+}
+
+# NAT gateway for secured internet connectivity to Database tier
+
+resource "aws_nat_gateway" "two_tier_NAT_DB" {
+  subnet_id     = module.public_subnet_2.id
+  allocation_id = aws_eip.NAT_DB_eip.id
+
+  tags = {
+    Name = "Two-Tier-DB-NAT"
+  }
+
+  depends_on = [aws_internet_gateway.two_tier_ig]
+
+}
+
+resource "aws_eip" "NAT_DB_eip" {
+  domain = "vpc"
+}
+
+
+# Public/ Route Table associations 
+
+resource "aws_route_table_association" "public_RT_1" {
+  route_table_id = aws_route_table.two_tier_public_RT.id
+  subnet_id      = module.public_subnet_1.id
+}
+
+resource "aws_route_table_association" "public_RT_2" {
+  route_table_id = aws_route_table.two_tier_public_RT.id
+  subnet_id      = module.public_subnet_2.id
+}
+
+resource "aws_route_table_association" "public_RT_3" {
+  route_table_id = aws_route_table.two_tier_public_RT.id
+  subnet_id      = module.public_subnet_3.id
+}
+
+# private application Route table subnet associations
+
+resource "aws_route_table_association" "private_RT_1" {
+  route_table_id = aws_route_table.two_tier_private_RT.id
+  subnet_id      = module.private_subnet_1.id
+}
+
+resource "aws_route_table_association" "private_RT_2" {
+  route_table_id = aws_route_table.two_tier_private_RT.id
+  subnet_id      = module.private_subnet_2.id
+}
+
+resource "aws_route_table_association" "private_RT_3" {
+  route_table_id = aws_route_table.two_tier_private_RT.id
+  subnet_id      = module.private_subnet_3.id
+}
+
+# Data tier Route table subnet associations
+
+resource "aws_route_table_association" "data_RT_1" {
+  route_table_id = aws_route_table.two_tier_DB_RT.id
+  subnet_id      = module.DB_subnet_1.id
+}
+
+resource "aws_route_table_association" "data_RT_2" {
+  route_table_id = aws_route_table.two_tier_DB_RT.id
+  subnet_id      = module.DB_subnet_2.id
+}
+
+resource "aws_route_table_association" "data_RT_3" {
+  route_table_id = aws_route_table.two_tier_DB_RT.id
+  subnet_id      = module.DB_subnet_3.id
+}
