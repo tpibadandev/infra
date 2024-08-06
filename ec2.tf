@@ -14,7 +14,7 @@ resource "aws_instance" "two_tier_bastion_host" {
 
 resource "aws_launch_template" "app_tier_instances" {
     name = "Two-Tier-Launch-Template"
-    image_id = "ami-09988af04120b3591"
+    image_id = "ami-0440fa9465661a496"
     instance_type = "t2.micro"
     key_name = aws_key_pair.two_tier_key_pair.key_name
     user_data = filebase64("${path.module}/launch_data.sh")
