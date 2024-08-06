@@ -3,7 +3,7 @@
 # Module template for the private application/web tier servers
 
 resource "aws_instance" "two_tier_server" {
-    ami = "ami-09988af04120b3591"
+    ami = "ami-0440fa9465661a496"
     instance_type = "t2.micro"
     key_name = "Two_Tier_Key_Pair"
     subnet_id = var.subnet_id
