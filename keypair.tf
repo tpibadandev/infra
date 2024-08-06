@@ -10,5 +10,5 @@ resource "tls_private_key" "two_tier_key_info" {
 
 resource "local_file" "key_pair_file" {
   content  = tls_private_key.two_tier_key_info.private_key_pem
-  filename = "Two-Tier_Key-Pair"
+  filename = "Two_Tier_Key_Pair"
 }
