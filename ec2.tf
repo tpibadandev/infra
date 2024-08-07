@@ -17,7 +17,7 @@ resource "aws_launch_template" "app_tier_instances" {
     image_id = "ami-0440fa9465661a496"
     instance_type = "t2.micro"
     key_name = aws_key_pair.two_tier_key_pair.key_name
-    user_data = filebase64("${path.module}/launch_data.sh")
+    user_data = filebase64("${path.module}/launch_data2.sh")
     vpc_security_group_ids = [ aws_security_group.two_tier_app_sg.id ]
 }
 
