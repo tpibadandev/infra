@@ -22,7 +22,6 @@ resource "aws_launch_template" "app_tier_instances" {
 }
 
 resource "aws_autoscaling_group" "app_tier_asg" {
-    availability_zones = [ "us-west-2a", "us-west-2b", "us-west-2c" ]
     desired_capacity = 3
     min_size = 2
     max_size = 3
